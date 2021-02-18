@@ -1,7 +1,10 @@
 package com.example.notetakingapp.ui.fragments.notes_list
 
+import android.app.AlertDialog
+import android.content.DialogInterface
 import android.os.Bundle
 import android.view.*
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
@@ -45,6 +48,30 @@ class NotesListFragment : Fragment() {
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         inflater.inflate(R.menu.notes_list_menu, menu)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when (item.itemId) {
+            R.id.menu_search -> {
+            }
+            R.id.menu_delete_all -> {
+                deleteAllNotes()
+            }
+        }
+        return super.onOptionsItemSelected(item)
+    }
+
+    private fun deleteAllNotes() {
+        val builder = AlertDialog.Builder(requireContext())
+        builder.setPositiveButton("Yes") { _: DialogInterface, _: Int ->
+            notesViewModel.deleteAllNotes()
+            Toast.makeText(requireContext(), "Successfully delete everything!", Toast.LENGTH_SHORT)
+                .show()
+        }
+        builder.setNegativeButton("No") { _, _ -> }
+        builder.setTitle("Delete everything?")
+        builder.setMessage("Are you sure you want to remove everything? This cannot be undone.")
+        builder.create().show()
     }
 
     private fun setupRecyclerView() {

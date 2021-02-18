@@ -36,6 +36,19 @@ class NotesViewModel(application: Application) : AndroidViewModel(application) {
         }
     }
 
+    fun deleteNote(note: Note) {
+        viewModelScope.launch(Dispatchers.IO) {
+            repository.deleteNote(note)
+        }
+    }
+
+    fun deleteAllNotes() {
+        viewModelScope.launch(Dispatchers.IO) {
+            repository.deleteAllNotes()
+        }
+    }
+
+
     fun noteIsValid(titleText: String, contentText: String): Boolean {
         return titleText.isNotEmpty() && contentText.isNotEmpty()
     }
