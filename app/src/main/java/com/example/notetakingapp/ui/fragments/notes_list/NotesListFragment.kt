@@ -5,6 +5,7 @@ import android.content.DialogInterface
 import android.os.Bundle
 import android.view.*
 import android.widget.Toast
+import androidx.appcompat.widget.SearchView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
@@ -18,6 +19,7 @@ import com.example.notetakingapp.models.Note
 import com.example.notetakingapp.ui.adapters.NotesAdapter
 import com.example.notetakingapp.ui.viewmodels.NotesViewModel
 import com.google.android.material.snackbar.Snackbar
+import java.util.*
 
 private lateinit var notesAdapter: NotesAdapter
 
@@ -29,8 +31,8 @@ class NotesListFragment : Fragment() {
     private val binding get() = _binding!!
 
     override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
+            inflater: LayoutInflater, container: ViewGroup?,
+            savedInstanceState: Bundle?
     ): View? {
         _binding = FragmentNotesListBinding.inflate(inflater, container, false)
         val view = binding.root
@@ -44,6 +46,7 @@ class NotesListFragment : Fragment() {
         notesViewModel.allNotes.observe(viewLifecycleOwner, Observer { notesList ->
             showEmptyNotesView(notesList.isEmpty())
             notesAdapter.setNotesList(notesList)
+            notesAdapter.setNotesListAll(notesListAll = notesList)
         })
 
         setHasOptionsMenu(true)
@@ -63,11 +66,39 @@ class NotesListFragment : Fragment() {
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         inflater.inflate(R.menu.notes_list_menu, menu)
+        val search = menu.findItem(R.id.menu_search)
+        val searchView = search?.actionView as SearchView
+        searchView.queryHint = "Search Notes..."
+        searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+            override fun onQueryTextSubmit(query: String?): Boolean {
+                return false
+            }
+            override fun onQueryTextChange(query: String?): Boolean {
+                if (query!!.isNotEmpty()) {
+                    filterNotes(query.toLowerCase(Locale.getDefault()))
+                } else {
+                    notesAdapter.setNotesList(notesAdapter.listOfNotesAll)
+                }
+                return true
+            }
+        })
+    }
+
+    private fun filterNotes(query: String) {
+        val allNotes = notesAdapter.listOfNotesAll
+        val filteredNotes = mutableListOf<Note>()
+        allNotes.forEach { note ->
+            if (note.title.toLowerCase(Locale.getDefault()).contains(query) || note.content.toLowerCase(Locale.getDefault()).contains(query)) {
+                filteredNotes.add(note)
+            }
+        }
+        notesAdapter.setNotesList(filteredNotes)
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             R.id.menu_search -> {
+
             }
             R.id.menu_delete_all -> {
                 deleteAllNotes()
@@ -81,7 +112,7 @@ class NotesListFragment : Fragment() {
         builder.setPositiveButton("Yes") { _: DialogInterface, _: Int ->
             notesViewModel.deleteAllNotes()
             Toast.makeText(requireContext(), "Successfully delete everything!", Toast.LENGTH_SHORT)
-                .show()
+                    .show()
         }
         builder.setNegativeButton("No") { _, _ -> }
         builder.setTitle("Delete everything?")
@@ -101,20 +132,20 @@ class NotesListFragment : Fragment() {
 
     private fun swipeToDelete(recyclerView: RecyclerView) {
         val swipeToDeleteCallback =
-            object : ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT) {
-                override fun onMove(
-                    recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder,
-                    target: RecyclerView.ViewHolder
-                ): Boolean {
-                    return false
-                }
+                object : ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT) {
+                    override fun onMove(
+                            recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder,
+                            target: RecyclerView.ViewHolder
+                    ): Boolean {
+                        return false
+                    }
 
-                override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
-                    val noteToDelete = notesAdapter.listOfNotes[viewHolder.adapterPosition]
-                    notesViewModel.deleteNote(noteToDelete)
-                    showUndoDeleteSnackbar(viewHolder.itemView, noteToDelete)
+                    override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
+                        val noteToDelete = notesAdapter.listOfNotes[viewHolder.adapterPosition]
+                        notesViewModel.deleteNote(noteToDelete)
+                        showUndoDeleteSnackbar(viewHolder.itemView, noteToDelete)
+                    }
                 }
-            }
         val itemTouchHelper = ItemTouchHelper(swipeToDeleteCallback)
         itemTouchHelper.attachToRecyclerView(recyclerView)
 

@@ -18,6 +18,7 @@ import com.example.notetakingapp.util.TimeUtil
 class NotesAdapter : RecyclerView.Adapter<NotesAdapter.ViewHolder>() {
 
     var listOfNotes = emptyList<Note>()
+    var listOfNotesAll = emptyList<Note>()
 
     class ViewHolder(private val itemNoteBinding: ItemNoteBinding) :
             RecyclerView.ViewHolder(itemNoteBinding.root) {
@@ -65,6 +66,10 @@ class NotesAdapter : RecyclerView.Adapter<NotesAdapter.ViewHolder>() {
         val notesDiffResult = DiffUtil.calculateDiff(NotesDiffUtil(oldNotesList = listOfNotes, newNotesList = newListOfNotes))
         this.listOfNotes = newListOfNotes
         notesDiffResult.dispatchUpdatesTo(this)
+    }
+
+    fun setNotesListAll(notesListAll: List<Note>?) {
+        listOfNotesAll = notesListAll!!
     }
 
 }
