@@ -4,11 +4,13 @@ import android.content.Context
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat
+import androidx.navigation.findNavController
 import androidx.recyclerview.widget.RecyclerView
 import com.example.notetakingapp.R
 import com.example.notetakingapp.databinding.ItemNoteBinding
 import com.example.notetakingapp.models.Note
 import com.example.notetakingapp.models.Priority
+import com.example.notetakingapp.ui.fragments.notes_list.NotesListFragmentDirections
 import com.example.notetakingapp.util.TimeUtil
 
 class NotesAdapter : RecyclerView.Adapter<NotesAdapter.ViewHolder>() {
@@ -32,8 +34,13 @@ class NotesAdapter : RecyclerView.Adapter<NotesAdapter.ViewHolder>() {
                 Priority.HIGH -> itemNoteBinding.priorityColorView.setBackgroundColor(
                     ContextCompat.getColor(context, R.color.purple_700)
                 )
-
             }
+
+            itemNoteBinding.noteItemLayout.setOnClickListener {
+                val action = NotesListFragmentDirections.actionNotesListFragmentToUpdateNoteFragment(note)
+                it.findNavController().navigate(action)
+            }
+
         }
     }
 
