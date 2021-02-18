@@ -72,4 +72,7 @@ dependencies {
     // RecyclerView Animator
     implementation 'jp.wasabeef:recyclerview-animators:3.0.0'
 
+    // Lottie animations
+    implementation "com.airbnb.android:lottie:3.6.1"
+
 }

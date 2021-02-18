@@ -17,4 +17,5 @@
     <string name="save_note">Save Note</string>
     <string name="delete_note">Delete Note</string>
     <string name="update_note">Update Note</string>
+    <string name="notes_are_empty">Notes are empty</string>
 </resources>

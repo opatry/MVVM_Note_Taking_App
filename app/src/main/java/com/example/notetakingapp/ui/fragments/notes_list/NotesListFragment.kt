@@ -38,12 +38,23 @@ class NotesListFragment : Fragment() {
         }
 
         notesViewModel.allNotes.observe(viewLifecycleOwner, Observer { notesList ->
+            showEmptyNotesView(notesList.isEmpty())
             notesAdapter.setNotesList(notesList)
         })
 
         setHasOptionsMenu(true)
 
         return view
+    }
+
+    private fun showEmptyNotesView(isEmpty: Boolean) {
+        if (isEmpty) {
+            binding.lottieAnimationView.visibility = View.VISIBLE
+            binding.emptyNotesTv.visibility = View.VISIBLE
+        } else {
+            binding.lottieAnimationView.visibility = View.INVISIBLE
+            binding.emptyNotesTv.visibility = View.INVISIBLE
+        }
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
