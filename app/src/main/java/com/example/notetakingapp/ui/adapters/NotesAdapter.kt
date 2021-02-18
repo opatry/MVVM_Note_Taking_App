@@ -15,7 +15,7 @@ import com.example.notetakingapp.util.TimeUtil
 
 class NotesAdapter : RecyclerView.Adapter<NotesAdapter.ViewHolder>() {
 
-    private var listOfNotes = emptyList<Note>()
+    var listOfNotes = emptyList<Note>()
 
     class ViewHolder(private val itemNoteBinding: ItemNoteBinding) :
         RecyclerView.ViewHolder(itemNoteBinding.root) {

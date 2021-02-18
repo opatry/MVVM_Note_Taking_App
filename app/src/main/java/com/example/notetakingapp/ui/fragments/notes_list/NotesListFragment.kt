@@ -9,11 +9,15 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.ItemTouchHelper
+import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import com.example.notetakingapp.R
 import com.example.notetakingapp.databinding.FragmentNotesListBinding
+import com.example.notetakingapp.models.Note
 import com.example.notetakingapp.ui.adapters.NotesAdapter
 import com.example.notetakingapp.ui.viewmodels.NotesViewModel
+import com.google.android.material.snackbar.Snackbar
 
 private lateinit var notesAdapter: NotesAdapter
 
@@ -90,8 +94,38 @@ class NotesListFragment : Fragment() {
         binding.notesListRv.apply {
             adapter = notesAdapter
             layoutManager = StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL)
+            swipeToDelete(this)
         }
     }
+
+    private fun swipeToDelete(recyclerView: RecyclerView) {
+        val swipeToDeleteCallback =
+            object : ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT) {
+                override fun onMove(
+                    recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder,
+                    target: RecyclerView.ViewHolder
+                ): Boolean {
+                    return false
+                }
+
+                override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
+                    val noteToDelete = notesAdapter.listOfNotes[viewHolder.adapterPosition]
+                    notesViewModel.deleteNote(noteToDelete)
+                    showUndoDeleteSnackbar(viewHolder.itemView, noteToDelete)
+                }
+            }
+        val itemTouchHelper = ItemTouchHelper(swipeToDeleteCallback)
+        itemTouchHelper.attachToRecyclerView(recyclerView)
+
+    }
+
+    private fun showUndoDeleteSnackbar(itemView: View, noteToDelete: Note) {
+        val snackbar = Snackbar.make(itemView, "Delete note!", Snackbar.LENGTH_LONG)
+        snackbar.setAction("Undo") {
+            notesViewModel.insertNote(noteToDelete)
+        }.show()
+    }
+
 
     override fun onDestroyView() {
         super.onDestroyView()
