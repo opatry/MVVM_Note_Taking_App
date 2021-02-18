@@ -5,7 +5,9 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat
 import androidx.navigation.findNavController
+import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
+import com.example.NotesDiffUtil
 import com.example.notetakingapp.R
 import com.example.notetakingapp.databinding.ItemNoteBinding
 import com.example.notetakingapp.models.Note
@@ -18,7 +20,7 @@ class NotesAdapter : RecyclerView.Adapter<NotesAdapter.ViewHolder>() {
     var listOfNotes = emptyList<Note>()
 
     class ViewHolder(private val itemNoteBinding: ItemNoteBinding) :
-        RecyclerView.ViewHolder(itemNoteBinding.root) {
+            RecyclerView.ViewHolder(itemNoteBinding.root) {
         fun bind(note: Note, context: Context) {
             itemNoteBinding.titleTv.text = note.title
             itemNoteBinding.contentTv.text = note.content
@@ -26,13 +28,13 @@ class NotesAdapter : RecyclerView.Adapter<NotesAdapter.ViewHolder>() {
 
             when (note.priority) {
                 Priority.LOW -> itemNoteBinding.priorityColorView.setBackgroundColor(
-                    ContextCompat.getColor(context, R.color.purple_200)
+                        ContextCompat.getColor(context, R.color.purple_200)
                 )
                 Priority.MEDIUM -> itemNoteBinding.priorityColorView.setBackgroundColor(
-                    ContextCompat.getColor(context, R.color.purple_500)
+                        ContextCompat.getColor(context, R.color.purple_500)
                 )
                 Priority.HIGH -> itemNoteBinding.priorityColorView.setBackgroundColor(
-                    ContextCompat.getColor(context, R.color.purple_700)
+                        ContextCompat.getColor(context, R.color.purple_700)
                 )
             }
 
@@ -46,7 +48,7 @@ class NotesAdapter : RecyclerView.Adapter<NotesAdapter.ViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val itemNoteBinding =
-            ItemNoteBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+                ItemNoteBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         return ViewHolder(itemNoteBinding)
     }
 
@@ -59,9 +61,10 @@ class NotesAdapter : RecyclerView.Adapter<NotesAdapter.ViewHolder>() {
         holder.bind(note, holder.itemView.context)
     }
 
-    fun setNotesList(notesList: List<Note>) {
-        this.listOfNotes = notesList
-        notifyDataSetChanged()
+    fun setNotesList(newListOfNotes: List<Note>) {
+        val notesDiffResult = DiffUtil.calculateDiff(NotesDiffUtil(oldNotesList = listOfNotes, newNotesList = newListOfNotes))
+        this.listOfNotes = newListOfNotes
+        notesDiffResult.dispatchUpdatesTo(this)
     }
 
 }
