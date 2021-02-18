@@ -9,4 +9,12 @@
     <string name="high">High</string>
 
     <string name="add_note_button">Add Note Button</string>
+    <string name="search">Search</string>
+    <string name="sort_by">Sort by</string>
+    <string name="priority_high">Priority High</string>
+    <string name="priority_low">Priority Low</string>
+    <string name="delete_all">Delete All</string>
+    <string name="save_note">Save Note</string>
+    <string name="delete_note">Delete Note</string>
+    <string name="update_note">Update Note</string>
 </resources>

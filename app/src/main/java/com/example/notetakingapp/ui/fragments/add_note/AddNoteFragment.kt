@@ -1,10 +1,9 @@
 package com.example.notetakingapp.ui.fragments.add_note
 
 import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
 import androidx.fragment.app.Fragment
+import com.example.notetakingapp.R
 import com.example.notetakingapp.databinding.FragmentAddNoteBinding
 
 class AddNoteFragment : Fragment() {
@@ -18,7 +17,14 @@ class AddNoteFragment : Fragment() {
     ): View? {
         _binding = FragmentAddNoteBinding.inflate(inflater, container, false)
         val view = binding.root
+
+        setHasOptionsMenu(true)
+
         return view
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        inflater.inflate(R.menu.add_note_menu, menu)
     }
 
     override fun onDestroyView() {

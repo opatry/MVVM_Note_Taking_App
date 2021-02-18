@@ -1,10 +1,8 @@
 package com.example.notetakingapp.ui.fragments.notes_list
 
 import android.os.Bundle
+import android.view.*
 import androidx.fragment.app.Fragment
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
 import androidx.navigation.fragment.findNavController
 import com.example.notetakingapp.R
 import com.example.notetakingapp.databinding.FragmentNotesListBinding
@@ -24,7 +22,17 @@ class NotesListFragment : Fragment() {
             findNavController().navigate(R.id.action_notesListFragment_to_addNoteFragment)
         }
 
+        binding.debug.setOnClickListener {
+            findNavController().navigate(R.id.action_notesListFragment_to_updateNoteFragment)
+        }
+
+        setHasOptionsMenu(true)
+
         return view
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        inflater.inflate(R.menu.notes_list_menu, menu)
     }
 
     override fun onDestroyView() {
