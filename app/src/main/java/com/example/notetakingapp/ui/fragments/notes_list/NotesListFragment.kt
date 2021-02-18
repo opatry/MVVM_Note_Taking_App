@@ -22,10 +22,6 @@ class NotesListFragment : Fragment() {
             findNavController().navigate(R.id.action_notesListFragment_to_addNoteFragment)
         }
 
-        binding.debug.setOnClickListener {
-            findNavController().navigate(R.id.action_notesListFragment_to_updateNoteFragment)
-        }
-
         setHasOptionsMenu(true)
 
         return view

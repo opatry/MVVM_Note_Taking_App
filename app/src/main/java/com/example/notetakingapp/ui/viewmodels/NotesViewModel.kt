@@ -30,4 +30,8 @@ class NotesViewModel(application: Application) : AndroidViewModel(application) {
         }
     }
 
+    fun noteIsValid(titleText: String, contentText: String): Boolean {
+        return titleText.isNotEmpty() && contentText.isNotEmpty()
+    }
+
 }
