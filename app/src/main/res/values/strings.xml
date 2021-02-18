@@ -1,3 +1,12 @@
 <resources>
     <string name="app_name">NoteTakingApp</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="title">Title</string>
+    <string name="content">Content</string>
+    <string name="date">Date</string>
+    <string name="low">Low</string>
+    <string name="medium">Medium</string>
+    <string name="high">High</string>
+
+    <string name="add_note_button">Add Note Button</string>
 </resources>
