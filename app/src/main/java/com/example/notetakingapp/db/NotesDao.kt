@@ -1,10 +1,7 @@
 package com.example.notetakingapp.db
 
 import androidx.lifecycle.LiveData
-import androidx.room.Dao
-import androidx.room.Insert
-import androidx.room.OnConflictStrategy
-import androidx.room.Query
+import androidx.room.*
 import com.example.notetakingapp.models.Note
 
 @Dao
@@ -15,5 +12,8 @@ interface NotesDao {
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     suspend fun insertNote(note: Note)
+
+    @Update
+    suspend fun updateNote(note: Note)
 
 }

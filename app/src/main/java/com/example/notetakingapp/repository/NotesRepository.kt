@@ -10,5 +10,7 @@ class NotesRepository(private val notesDao: NotesDao) {
 
     suspend fun insertNote(note: Note) = notesDao.insertNote(note)
 
+    suspend fun updateNote(note: Note) = notesDao.updateNote(note)
+
 
 }

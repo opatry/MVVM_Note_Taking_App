@@ -54,7 +54,7 @@ class AddNoteFragment : Fragment() {
                 TimeUtil.getCurrentTime(),
                 Priority.LOW // #TODO
             )
-            notesViewModel.insertData(note)
+            notesViewModel.insertNote(note)
             Toast.makeText(context, "Successfully added note", Toast.LENGTH_SHORT).show()
             findNavController().navigate(R.id.action_addNoteFragment_to_notesListFragment)
         } else {
