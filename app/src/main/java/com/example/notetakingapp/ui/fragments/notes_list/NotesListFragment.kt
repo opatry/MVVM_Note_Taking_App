@@ -35,6 +35,8 @@ class NotesListFragment : Fragment() {
             inflater: LayoutInflater, container: ViewGroup?,
             savedInstanceState: Bundle?
     ): View? {
+        setHasOptionsMenu(true)
+
         _binding = FragmentNotesListBinding.inflate(inflater, container, false)
         val view = binding.root
 
@@ -50,27 +52,7 @@ class NotesListFragment : Fragment() {
             setNotesListAll(notesListAll = notesList) // In order to filter the list, need a copy of the original list!
         })
 
-        setHasOptionsMenu(true)
-
         return view
-    }
-
-    private fun setNotesList(notesList: List<Note>) {
-        notesAdapter.setNotesList(notesList)
-    }
-
-    private fun setNotesListAll(notesListAll: List<Note>) {
-        notesAdapter.setNotesListAll(notesListAll)
-    }
-
-    private fun showEmptyNotesView(isEmpty: Boolean) {
-        if (isEmpty) {
-            binding.lottieAnimationView.visibility = View.VISIBLE
-            binding.emptyNotesTv.visibility = View.VISIBLE
-        } else {
-            binding.lottieAnimationView.visibility = View.INVISIBLE
-            binding.emptyNotesTv.visibility = View.INVISIBLE
-        }
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
@@ -135,7 +117,15 @@ class NotesListFragment : Fragment() {
                 filteredNotes.add(note)
             }
         }
-        notesAdapter.setNotesList(filteredNotes)
+        setNotesList(filteredNotes)
+    }
+
+    private fun setNotesList(notesList: List<Note>) {
+        notesAdapter.setNotesList(notesList)
+    }
+
+    private fun setNotesListAll(notesListAll: List<Note>) {
+        notesAdapter.setNotesListAll(notesListAll)
     }
 
     private fun deleteAllNotes() {
@@ -189,6 +179,15 @@ class NotesListFragment : Fragment() {
         }.show()
     }
 
+    private fun showEmptyNotesView(isEmpty: Boolean) {
+        if (isEmpty) {
+            binding.lottieAnimationView.visibility = View.VISIBLE
+            binding.emptyNotesTv.visibility = View.VISIBLE
+        } else {
+            binding.lottieAnimationView.visibility = View.INVISIBLE
+            binding.emptyNotesTv.visibility = View.INVISIBLE
+        }
+    }
 
     override fun onDestroyView() {
         super.onDestroyView()
