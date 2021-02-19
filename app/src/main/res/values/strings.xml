@@ -1,6 +1,5 @@
 <resources>
     <string name="app_name">NoteTakingApp</string>
-    <!-- TODO: Remove or change this placeholder text -->
     <string name="title">Title</string>
     <string name="content">Content</string>
     <string name="date">Date</string>
@@ -18,4 +17,6 @@
     <string name="delete_note">Delete Note</string>
     <string name="update_note">Update Note</string>
     <string name="notes_are_empty">Notes are empty</string>
+    <string name="date_newest">Date (Newest)</string>
+    <string name="date_oldest">Date (Oldest)</string>
 </resources>

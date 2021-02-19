@@ -8,7 +8,6 @@ import android.widget.Toast
 import androidx.appcompat.widget.SearchView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
@@ -16,6 +15,8 @@ import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import com.example.notetakingapp.R
 import com.example.notetakingapp.databinding.FragmentNotesListBinding
 import com.example.notetakingapp.models.Note
+import com.example.notetakingapp.models.SortBy
+import com.example.notetakingapp.models.SortBy.*
 import com.example.notetakingapp.ui.adapters.NotesAdapter
 import com.example.notetakingapp.ui.viewmodels.NotesViewModel
 import com.google.android.material.snackbar.Snackbar
@@ -43,15 +44,23 @@ class NotesListFragment : Fragment() {
             findNavController().navigate(R.id.action_notesListFragment_to_addNoteFragment)
         }
 
-        notesViewModel.allNotes.observe(viewLifecycleOwner, Observer { notesList ->
+        notesViewModel.allNotes.observe(viewLifecycleOwner, androidx.lifecycle.Observer { notesList ->
             showEmptyNotesView(notesList.isEmpty())
-            notesAdapter.setNotesList(notesList)
-            notesAdapter.setNotesListAll(notesListAll = notesList)
+            setNotesList(notesList = notesList)
+            setNotesListAll(notesListAll = notesList) // In order to filter the list, need a copy of the original list!
         })
 
         setHasOptionsMenu(true)
 
         return view
+    }
+
+    private fun setNotesList(notesList: List<Note>) {
+        notesAdapter.setNotesList(notesList)
+    }
+
+    private fun setNotesListAll(notesListAll: List<Note>) {
+        notesAdapter.setNotesListAll(notesListAll)
     }
 
     private fun showEmptyNotesView(isEmpty: Boolean) {
@@ -73,15 +82,49 @@ class NotesListFragment : Fragment() {
             override fun onQueryTextSubmit(query: String?): Boolean {
                 return false
             }
+
             override fun onQueryTextChange(query: String?): Boolean {
                 if (query!!.isNotEmpty()) {
                     filterNotes(query.toLowerCase(Locale.getDefault()))
                 } else {
-                    notesAdapter.setNotesList(notesAdapter.listOfNotesAll)
+                    setNotesList(notesAdapter.listOfNotesAll)
                 }
                 return true
             }
         })
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when (item.itemId) {
+            R.id.menu_date_newest -> {
+                sortNotesList(DATE_NEWEST)
+            }
+            R.id.menu_date_oldest -> {
+                sortNotesList(DATE_OLDEST)
+            }
+            R.id.menu_priority_high -> {
+                sortNotesList(PRIORITY_HIGHEST)
+            }
+            R.id.menu_priority_low -> {
+                sortNotesList(PRIORITY_LOWEST)
+            }
+            R.id.menu_delete_all -> {
+                deleteAllNotes()
+            }
+        }
+        return super.onOptionsItemSelected(item)
+    }
+
+    private fun sortNotesList(sortBy: SortBy) {
+        var notes = notesAdapter.listOfNotes
+        notes = when (sortBy) {
+            DATE_NEWEST -> notes.sortedByDescending { it.date }
+            DATE_OLDEST -> notes.sortedBy { it.date }
+            PRIORITY_HIGHEST -> notes.sortedByDescending { it.priority }
+            PRIORITY_LOWEST -> notes.sortedBy { it.priority }
+        }
+        setNotesList(notes)
+        setNotesListAll(notes)
     }
 
     private fun filterNotes(query: String) {
@@ -93,18 +136,6 @@ class NotesListFragment : Fragment() {
             }
         }
         notesAdapter.setNotesList(filteredNotes)
-    }
-
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        when (item.itemId) {
-            R.id.menu_search -> {
-
-            }
-            R.id.menu_delete_all -> {
-                deleteAllNotes()
-            }
-        }
-        return super.onOptionsItemSelected(item)
     }
 
     private fun deleteAllNotes() {
