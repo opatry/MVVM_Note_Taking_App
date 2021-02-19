@@ -1,6 +1,5 @@
 package com.example.notetakingapp.ui.fragments.notes_list
 
-import android.app.Activity
 import android.app.AlertDialog
 import android.content.Context
 import android.content.DialogInterface
@@ -23,7 +22,6 @@ import com.example.notetakingapp.models.SortBy
 import com.example.notetakingapp.models.SortBy.*
 import com.example.notetakingapp.ui.adapters.NotesAdapter
 import com.example.notetakingapp.ui.viewmodels.NotesViewModel
-import com.example.notetakingapp.util.hideKeyboard
 import com.google.android.material.snackbar.Snackbar
 import java.util.*
 
