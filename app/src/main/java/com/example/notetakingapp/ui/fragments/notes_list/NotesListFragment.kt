@@ -165,7 +165,12 @@ class NotesListFragment : Fragment() {
             adapter = notesAdapter
             layoutManager = StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL)
             swipeToDelete(this)
-            this.itemAnimator = jp.wasabeef.recyclerview.animators.ScaleInAnimator()
+            this.itemAnimator = jp.wasabeef.recyclerview.animators.ScaleInAnimator().apply {
+                addDuration = 250
+                removeDuration = 250
+                moveDuration = 250
+                changeDuration = 250
+            }
         }
     }
 
