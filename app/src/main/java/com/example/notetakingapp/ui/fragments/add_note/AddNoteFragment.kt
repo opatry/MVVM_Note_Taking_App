@@ -12,6 +12,8 @@ import com.example.notetakingapp.models.Note
 import com.example.notetakingapp.models.Priority
 import com.example.notetakingapp.ui.viewmodels.NotesViewModel
 import com.example.notetakingapp.util.TimeUtil
+import com.google.android.material.chip.Chip
+import java.util.*
 
 class AddNoteFragment : Fragment() {
 
@@ -21,8 +23,8 @@ class AddNoteFragment : Fragment() {
     private val binding get() = _binding!!
 
     override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
+            inflater: LayoutInflater, container: ViewGroup?,
+            savedInstanceState: Bundle?
     ): View? {
         _binding = FragmentAddNoteBinding.inflate(inflater, container, false)
         val view = binding.root
@@ -48,11 +50,11 @@ class AddNoteFragment : Fragment() {
         val contentText = binding.contentEt.text.toString()
         if (notesViewModel.noteIsValid(titleText, contentText)) {
             val note = Note(
-                0, // Database set to auto increment
-                titleText,
-                contentText,
-                TimeUtil.getCurrentTime(),
-                Priority.LOW // #TODO
+                    0, // Database set to auto increment
+                    titleText,
+                    contentText,
+                    TimeUtil.getCurrentTime(),
+                    getChipPriority()
             )
             notesViewModel.insertNote(note)
             Toast.makeText(context, "Successfully added note", Toast.LENGTH_SHORT).show()
@@ -62,8 +64,17 @@ class AddNoteFragment : Fragment() {
         }
     }
 
-    private fun noteIsValid(): Boolean {
-        return binding.titleEt.text.isNotEmpty() && binding.contentEt.text.isNotEmpty()
+    private fun getChipPriority(): Priority {
+        val chipsCount = binding.chipGroup.childCount
+        var i = 0
+        while (i < chipsCount) {
+            val chip = binding.chipGroup.getChildAt(i) as Chip
+            if (chip.isChecked) {
+                return Priority.valueOf(chip.text.toString().toUpperCase(Locale.getDefault()))
+            }
+            i++
+        }
+        return Priority.LOW
     }
 
     override fun onDestroyView() {

@@ -5,6 +5,7 @@ import android.content.DialogInterface
 import android.os.Bundle
 import android.view.*
 import android.widget.Toast
+import androidx.core.view.get
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
@@ -15,6 +16,8 @@ import com.example.notetakingapp.models.Note
 import com.example.notetakingapp.models.Priority
 import com.example.notetakingapp.ui.viewmodels.NotesViewModel
 import com.example.notetakingapp.util.TimeUtil
+import com.google.android.material.chip.Chip
+import java.util.*
 
 class UpdateNoteFragment : Fragment() {
 
@@ -26,8 +29,8 @@ class UpdateNoteFragment : Fragment() {
     private val args by navArgs<UpdateNoteFragmentArgs>()
 
     override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
+            inflater: LayoutInflater, container: ViewGroup?,
+            savedInstanceState: Bundle?
     ): View? {
         _binding = FragmentUpdateNoteBinding.inflate(inflater, container, false)
         val view = binding.root
@@ -42,7 +45,19 @@ class UpdateNoteFragment : Fragment() {
     private fun setUpdateViewsFromArgs() {
         binding.updateTitleEt.setText(args.currentNote.title)
         binding.updateContentEt.setText(args.currentNote.content)
-        // TODO - Chip Group
+
+        when (args.currentNote.priority) {
+            Priority.LOW -> {
+                binding.updateChipGroup.check(binding.updateChipGroup[0].id)
+            }
+            Priority.MEDIUM -> {
+                binding.updateChipGroup.check(binding.updateChipGroup[1].id)
+            }
+            Priority.HIGH -> {
+                binding.updateChipGroup.check(binding.updateChipGroup[2].id)
+            }
+        }
+
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
@@ -67,7 +82,7 @@ class UpdateNoteFragment : Fragment() {
             notesViewModel.deleteNote(args.currentNote)
             findNavController().navigate(R.id.action_updateNoteFragment_to_notesListFragment)
             Toast.makeText(requireContext(), "Successfully deleted note!", Toast.LENGTH_SHORT)
-                .show()
+                    .show()
         }
         builder.setNegativeButton("No") { _, _ -> }
         builder.setTitle("Delete this note?")
@@ -81,11 +96,11 @@ class UpdateNoteFragment : Fragment() {
         val contentText = binding.updateContentEt.text.toString()
         if (notesViewModel.noteIsValid(titleText, contentText)) {
             val note = Note(
-                args.currentNote.id,
-                titleText,
-                contentText,
-                TimeUtil.getCurrentTime(),
-                Priority.HIGH // #TODO
+                    args.currentNote.id,
+                    titleText,
+                    contentText,
+                    TimeUtil.getCurrentTime(),
+                    getChipPriority()
             )
             notesViewModel.updateNote(note)
             Toast.makeText(context, "Successfully updated note", Toast.LENGTH_SHORT).show()
@@ -93,6 +108,19 @@ class UpdateNoteFragment : Fragment() {
         } else {
             Toast.makeText(context, "Please fill in the fields!", Toast.LENGTH_SHORT).show()
         }
+    }
+
+    private fun getChipPriority(): Priority {
+        val chipsCount = binding.updateChipGroup.childCount
+        var i = 0
+        while (i < chipsCount) {
+            val chip = binding.updateChipGroup.getChildAt(i) as Chip
+            if (chip.isChecked) {
+                return Priority.valueOf(chip.text.toString().toUpperCase(Locale.getDefault()))
+            }
+            i++
+        }
+        return Priority.LOW
     }
 
     override fun onDestroyView() {
