@@ -147,14 +147,15 @@ class NotesListFragment : Fragment() {
 
     private fun deleteAllNotes() {
         val builder = AlertDialog.Builder(requireContext())
+        builder.setIcon(R.drawable.ic_delete_forever)
+        builder.setTitle("Delete everything?")
+        builder.setMessage("Are you sure you want to delete everything? This cannot be undone.")
         builder.setPositiveButton("Yes") { _: DialogInterface, _: Int ->
             notesViewModel.deleteAllNotes()
-            Toast.makeText(requireContext(), "Successfully delete everything!", Toast.LENGTH_SHORT)
+            Toast.makeText(requireContext(), "Successfully deleted everything!", Toast.LENGTH_SHORT)
                     .show()
         }
         builder.setNegativeButton("No") { _, _ -> }
-        builder.setTitle("Delete everything?")
-        builder.setMessage("Are you sure you want to remove everything? This cannot be undone.")
         builder.create().show()
     }
 

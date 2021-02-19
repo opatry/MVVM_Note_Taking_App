@@ -78,6 +78,9 @@ class UpdateNoteFragment : Fragment() {
 
     private fun deleteNote() {
         val builder = AlertDialog.Builder(requireContext())
+        builder.setIcon(R.drawable.ic_delete_forever)
+        builder.setTitle("Delete this note?")
+        builder.setMessage("Are you sure you want to remove this note? This cannot be undone.")
         builder.setPositiveButton("Yes") { _: DialogInterface, _: Int ->
             notesViewModel.deleteNote(args.currentNote)
             findNavController().navigate(R.id.action_updateNoteFragment_to_notesListFragment)
@@ -85,8 +88,6 @@ class UpdateNoteFragment : Fragment() {
                     .show()
         }
         builder.setNegativeButton("No") { _, _ -> }
-        builder.setTitle("Delete this note?")
-        builder.setMessage("Are you sure you want to remove this note? This cannot be undone.")
         builder.create().show()
 
     }
