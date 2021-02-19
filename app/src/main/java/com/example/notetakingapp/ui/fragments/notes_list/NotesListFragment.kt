@@ -1,9 +1,12 @@
 package com.example.notetakingapp.ui.fragments.notes_list
 
+import android.app.Activity
 import android.app.AlertDialog
+import android.content.Context
 import android.content.DialogInterface
 import android.os.Bundle
 import android.view.*
+import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
 import androidx.appcompat.widget.SearchView
 import androidx.fragment.app.Fragment
@@ -20,6 +23,7 @@ import com.example.notetakingapp.models.SortBy
 import com.example.notetakingapp.models.SortBy.*
 import com.example.notetakingapp.ui.adapters.NotesAdapter
 import com.example.notetakingapp.ui.viewmodels.NotesViewModel
+import com.example.notetakingapp.util.hideKeyboard
 import com.google.android.material.snackbar.Snackbar
 import java.util.*
 
@@ -33,10 +37,11 @@ class NotesListFragment : Fragment() {
     private val binding get() = _binding!!
 
     override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
+            inflater: LayoutInflater, container: ViewGroup?,
+            savedInstanceState: Bundle?
     ): View? {
         setHasOptionsMenu(true)
+        hideKeyboard()
 
         _binding = FragmentNotesListBinding.inflate(inflater, container, false)
         val view = binding.root
@@ -126,7 +131,7 @@ class NotesListFragment : Fragment() {
         val filteredNotes = mutableListOf<Note>()
         allNotes.forEach { note ->
             if (note.title.toLowerCase(Locale.getDefault()).contains(query) ||
-                note.content.toLowerCase(Locale.getDefault()).contains(query)
+                    note.content.toLowerCase(Locale.getDefault()).contains(query)
             ) {
                 filteredNotes.add(note)
             }
@@ -147,7 +152,7 @@ class NotesListFragment : Fragment() {
         builder.setPositiveButton("Yes") { _: DialogInterface, _: Int ->
             notesViewModel.deleteAllNotes()
             Toast.makeText(requireContext(), "Successfully delete everything!", Toast.LENGTH_SHORT)
-                .show()
+                    .show()
         }
         builder.setNegativeButton("No") { _, _ -> }
         builder.setTitle("Delete everything?")
@@ -167,20 +172,20 @@ class NotesListFragment : Fragment() {
 
     private fun swipeToDelete(recyclerView: RecyclerView) {
         val swipeToDeleteCallback =
-            object : ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT) {
-                override fun onMove(
-                    recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder,
-                    target: RecyclerView.ViewHolder
-                ): Boolean {
-                    return false
-                }
+                object : ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT) {
+                    override fun onMove(
+                            recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder,
+                            target: RecyclerView.ViewHolder
+                    ): Boolean {
+                        return false
+                    }
 
-                override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
-                    val noteToDelete = notesAdapter.listOfNotes[viewHolder.adapterPosition]
-                    notesViewModel.deleteNote(noteToDelete)
-                    showUndoDeleteSnackbar(viewHolder.itemView, noteToDelete)
+                    override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
+                        val noteToDelete = notesAdapter.listOfNotes[viewHolder.adapterPosition]
+                        notesViewModel.deleteNote(noteToDelete)
+                        showUndoDeleteSnackbar(viewHolder.itemView, noteToDelete)
+                    }
                 }
-            }
         val itemTouchHelper = ItemTouchHelper(swipeToDeleteCallback)
         itemTouchHelper.attachToRecyclerView(recyclerView)
     }
@@ -199,6 +204,13 @@ class NotesListFragment : Fragment() {
         } else {
             binding.lottieAnimationView.visibility = View.INVISIBLE
             binding.emptyNotesTv.visibility = View.INVISIBLE
+        }
+    }
+
+    private fun hideKeyboard() {
+        val inputMethodManager = requireActivity().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+        requireActivity().currentFocus?.let {
+            inputMethodManager.hideSoftInputFromWindow(requireActivity().currentFocus?.windowToken, InputMethodManager.HIDE_NOT_ALWAYS)
         }
     }
 
