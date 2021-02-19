@@ -14,6 +14,11 @@
         <!-- Customize your theme here. -->
     </style>
 
+    <style name="splashScreenTheme" parent="Theme.MaterialComponents.Light.NoActionBar">
+        <item name="android:windowBackground">@drawable/splash_img</item>
+        <item name="android:statusBarColor">@color/white</item>
+    </style>
+
     <style name="CustomChipStyleLow" parent="Widget.MaterialComponents.Chip.Choice">
         <item name="chipBackgroundColor">@color/chip_background_color_low</item>
         <item name="android:textColor">@color/chip_text_color</item>
