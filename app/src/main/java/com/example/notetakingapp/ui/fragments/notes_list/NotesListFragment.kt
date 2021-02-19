@@ -8,6 +8,7 @@ import android.widget.Toast
 import androidx.appcompat.widget.SearchView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
@@ -32,8 +33,8 @@ class NotesListFragment : Fragment() {
     private val binding get() = _binding!!
 
     override fun onCreateView(
-            inflater: LayoutInflater, container: ViewGroup?,
-            savedInstanceState: Bundle?
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
     ): View? {
         setHasOptionsMenu(true)
 
@@ -46,10 +47,17 @@ class NotesListFragment : Fragment() {
             findNavController().navigate(R.id.action_notesListFragment_to_addNoteFragment)
         }
 
-        notesViewModel.allNotes.observe(viewLifecycleOwner, androidx.lifecycle.Observer { notesList ->
+        notesViewModel.allNotes.observe(viewLifecycleOwner, Observer { notesList ->
             showEmptyNotesView(notesList.isEmpty())
             setNotesList(notesList = notesList)
             setNotesListAll(notesListAll = notesList) // In order to filter the list, need a copy of the original list!
+            if (notesViewModel.readFromDataStore.value != null) {
+                sortNotesList(SortBy.valueOf(notesViewModel.readFromDataStore.value!!))
+            }
+        })
+
+        notesViewModel.readFromDataStore.observe(viewLifecycleOwner, Observer { sortBy ->
+            sortNotesList(valueOf(sortBy))
         })
 
         return view
@@ -80,15 +88,19 @@ class NotesListFragment : Fragment() {
         when (item.itemId) {
             R.id.menu_date_newest -> {
                 sortNotesList(DATE_NEWEST)
+                notesViewModel.saveToDataStore(DATE_NEWEST.toString())
             }
             R.id.menu_date_oldest -> {
                 sortNotesList(DATE_OLDEST)
+                notesViewModel.saveToDataStore(DATE_OLDEST.toString())
             }
             R.id.menu_priority_high -> {
                 sortNotesList(PRIORITY_HIGHEST)
+                notesViewModel.saveToDataStore(PRIORITY_HIGHEST.toString())
             }
             R.id.menu_priority_low -> {
                 sortNotesList(PRIORITY_LOWEST)
+                notesViewModel.saveToDataStore(PRIORITY_LOWEST.toString())
             }
             R.id.menu_delete_all -> {
                 deleteAllNotes()
@@ -102,8 +114,8 @@ class NotesListFragment : Fragment() {
         notes = when (sortBy) {
             DATE_NEWEST -> notes.sortedByDescending { it.date }
             DATE_OLDEST -> notes.sortedBy { it.date }
-            PRIORITY_HIGHEST -> notes.sortedByDescending { it.priority }
-            PRIORITY_LOWEST -> notes.sortedBy { it.priority }
+            PRIORITY_HIGHEST -> notes.sortedWith(compareBy<Note> { it.priority }.thenBy { it.date }).reversed()
+            PRIORITY_LOWEST -> notes.sortedWith(compareBy<Note> { it.priority }.thenByDescending { it.date })
         }
         setNotesList(notes)
         setNotesListAll(notes)
@@ -113,7 +125,9 @@ class NotesListFragment : Fragment() {
         val allNotes = notesAdapter.listOfNotesAll
         val filteredNotes = mutableListOf<Note>()
         allNotes.forEach { note ->
-            if (note.title.toLowerCase(Locale.getDefault()).contains(query) || note.content.toLowerCase(Locale.getDefault()).contains(query)) {
+            if (note.title.toLowerCase(Locale.getDefault()).contains(query) ||
+                note.content.toLowerCase(Locale.getDefault()).contains(query)
+            ) {
                 filteredNotes.add(note)
             }
         }
@@ -133,7 +147,7 @@ class NotesListFragment : Fragment() {
         builder.setPositiveButton("Yes") { _: DialogInterface, _: Int ->
             notesViewModel.deleteAllNotes()
             Toast.makeText(requireContext(), "Successfully delete everything!", Toast.LENGTH_SHORT)
-                    .show()
+                .show()
         }
         builder.setNegativeButton("No") { _, _ -> }
         builder.setTitle("Delete everything?")
@@ -153,23 +167,22 @@ class NotesListFragment : Fragment() {
 
     private fun swipeToDelete(recyclerView: RecyclerView) {
         val swipeToDeleteCallback =
-                object : ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT) {
-                    override fun onMove(
-                            recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder,
-                            target: RecyclerView.ViewHolder
-                    ): Boolean {
-                        return false
-                    }
-
-                    override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
-                        val noteToDelete = notesAdapter.listOfNotes[viewHolder.adapterPosition]
-                        notesViewModel.deleteNote(noteToDelete)
-                        showUndoDeleteSnackbar(viewHolder.itemView, noteToDelete)
-                    }
+            object : ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT) {
+                override fun onMove(
+                    recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder,
+                    target: RecyclerView.ViewHolder
+                ): Boolean {
+                    return false
                 }
+
+                override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
+                    val noteToDelete = notesAdapter.listOfNotes[viewHolder.adapterPosition]
+                    notesViewModel.deleteNote(noteToDelete)
+                    showUndoDeleteSnackbar(viewHolder.itemView, noteToDelete)
+                }
+            }
         val itemTouchHelper = ItemTouchHelper(swipeToDeleteCallback)
         itemTouchHelper.attachToRecyclerView(recyclerView)
-
     }
 
     private fun showUndoDeleteSnackbar(itemView: View, noteToDelete: Note) {
