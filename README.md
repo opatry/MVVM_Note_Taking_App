@@ -19,6 +19,8 @@ Note taking application built in Kotlin using the latest Jetpack Components and 
 
 ✅ DataStore
 
+✅ View Binding
+
 ✅ Navigation Components
 
 ✅ Material Design
