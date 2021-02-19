@@ -28,15 +28,18 @@ class NotesAdapter : RecyclerView.Adapter<NotesAdapter.ViewHolder>() {
             itemNoteBinding.dateTv.text = TimeUtil.getDateFormat(note.date)
 
             when (note.priority) {
-                Priority.LOW -> itemNoteBinding.priorityColorView.setBackgroundColor(
-                        ContextCompat.getColor(context, R.color.purple_200)
-                )
-                Priority.MEDIUM -> itemNoteBinding.priorityColorView.setBackgroundColor(
-                        ContextCompat.getColor(context, R.color.purple_500)
-                )
-                Priority.HIGH -> itemNoteBinding.priorityColorView.setBackgroundColor(
-                        ContextCompat.getColor(context, R.color.purple_700)
-                )
+                Priority.LOW -> {
+                    itemNoteBinding.priorityColorView.backgroundTintList = ContextCompat.getColorStateList(context, R.color.purple_200)
+                    itemNoteBinding.priorityColorView.text = "LOW"
+                }
+                Priority.MEDIUM -> {
+                    itemNoteBinding.priorityColorView.backgroundTintList = ContextCompat.getColorStateList(context, R.color.purple_500)
+                    itemNoteBinding.priorityColorView.text = "MEDIUM"
+                }
+                Priority.HIGH -> {
+                    itemNoteBinding.priorityColorView.backgroundTintList = ContextCompat.getColorStateList(context, R.color.purple_700)
+                    itemNoteBinding.priorityColorView.text = "HIGH"
+                }
             }
 
             itemNoteBinding.noteItemLayout.setOnClickListener {
