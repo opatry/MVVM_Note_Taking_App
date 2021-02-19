@@ -1,4 +1,4 @@
-package com.example
+package com.example.notetakingapp.util
 
 import androidx.recyclerview.widget.DiffUtil
 import com.example.notetakingapp.models.Note

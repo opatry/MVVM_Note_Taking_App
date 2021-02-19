@@ -1,10 +1,11 @@
-package com.example.notetakingapp
+package com.example.notetakingapp.ui
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.setupActionBarWithNavController
+import com.example.notetakingapp.R
 
 private lateinit var navController: NavController
 

@@ -7,7 +7,7 @@ import androidx.core.content.ContextCompat
 import androidx.navigation.findNavController
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
-import com.example.NotesDiffUtil
+import com.example.notetakingapp.util.NotesDiffUtil
 import com.example.notetakingapp.R
 import com.example.notetakingapp.databinding.ItemNoteBinding
 import com.example.notetakingapp.models.Note
