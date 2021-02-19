@@ -19,4 +19,7 @@
     <string name="notes_are_empty">Notes are empty</string>
     <string name="date_newest">Date (Newest)</string>
     <string name="date_oldest">Date (Oldest)</string>
+    <string name="color">Color</string>
+    <string name="set_priority">Set Priority</string>
+    <string name="update_priority">Update Priority</string>
 </resources>

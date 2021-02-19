@@ -13,4 +13,20 @@
         <item name="android:statusBarColor" tools:targetApi="l">?attr/colorPrimaryVariant</item>
         <!-- Customize your theme here. -->
     </style>
+
+    <style name="CustomChipStyleLow" parent="Widget.MaterialComponents.Chip.Choice">
+        <item name="chipBackgroundColor">@color/chip_background_color_low</item>
+        <item name="android:textColor">@color/chip_text_color</item>
+    </style>
+
+    <style name="CustomChipStyleMedium" parent="Widget.MaterialComponents.Chip.Choice">
+        <item name="chipBackgroundColor">@color/chip_background_color_medium</item>
+        <item name="android:textColor">@color/chip_text_color</item>
+    </style>
+
+    <style name="CustomChipStyleHigh" parent="Widget.MaterialComponents.Chip.Choice">
+        <item name="chipBackgroundColor">@color/chip_background_color_high</item>
+        <item name="android:textColor">@color/chip_text_color</item>
+    </style>
+
 </resources>
