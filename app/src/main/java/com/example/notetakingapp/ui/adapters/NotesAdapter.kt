@@ -1,8 +1,11 @@
 package com.example.notetakingapp.ui.adapters
 
 import android.content.Context
+import android.view.ContextMenu
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.navigation.findNavController
 import androidx.recyclerview.widget.DiffUtil
@@ -21,7 +24,7 @@ class NotesAdapter : RecyclerView.Adapter<NotesAdapter.ViewHolder>() {
     var listOfNotesAll = emptyList<Note>()
 
     class ViewHolder(private val itemNoteBinding: ItemNoteBinding) :
-            RecyclerView.ViewHolder(itemNoteBinding.root) {
+        RecyclerView.ViewHolder(itemNoteBinding.root) {
         fun bind(note: Note, context: Context) {
             itemNoteBinding.titleTv.text = note.title
             itemNoteBinding.contentTv.text = note.content
@@ -29,22 +32,51 @@ class NotesAdapter : RecyclerView.Adapter<NotesAdapter.ViewHolder>() {
 
             when (note.priority) {
                 Priority.LOW -> {
-                    itemNoteBinding.priorityColorView.backgroundTintList = ContextCompat.getColorStateList(context, R.color.low_priority_color)
+                    itemNoteBinding.priorityColorView.backgroundTintList =
+                        ContextCompat.getColorStateList(context, R.color.low_priority_color)
                     itemNoteBinding.priorityColorView.text = context.getString(R.string.low)
                 }
                 Priority.MEDIUM -> {
-                    itemNoteBinding.priorityColorView.backgroundTintList = ContextCompat.getColorStateList(context, R.color.medium_priority_color)
+                    itemNoteBinding.priorityColorView.backgroundTintList =
+                        ContextCompat.getColorStateList(context, R.color.medium_priority_color)
                     itemNoteBinding.priorityColorView.text = context.getString(R.string.medium)
                 }
                 Priority.HIGH -> {
-                    itemNoteBinding.priorityColorView.backgroundTintList = ContextCompat.getColorStateList(context, R.color.high_priority_color)
+                    itemNoteBinding.priorityColorView.backgroundTintList =
+                        ContextCompat.getColorStateList(context, R.color.high_priority_color)
                     itemNoteBinding.priorityColorView.text = context.getString(R.string.high)
                 }
             }
 
             itemNoteBinding.noteItemLayout.setOnClickListener {
-                val action = NotesListFragmentDirections.actionNotesListFragmentToUpdateNoteFragment(note)
+                val action =
+                    NotesListFragmentDirections.actionNotesListFragmentToUpdateNoteFragment(note)
                 it.findNavController().navigate(action)
+            }
+
+            itemNoteBinding.noteItemLayout.setOnCreateContextMenuListener { contextMenu, view, _ ->
+                contextMenu?.setHeaderTitle("Select a priority")
+                contextMenu?.add(0, 1, 0, "Low")?.setOnMenuItemClickListener {
+                    note.priority = Priority.LOW
+                    val action =
+                        NotesListFragmentDirections.actionNotesListFragmentToUpdateNoteFragment(note)
+                    view.findNavController().navigate(action)
+                    true
+                }
+                contextMenu?.add(0, 2, 0, "Medium")?.setOnMenuItemClickListener {
+                    note.priority = Priority.MEDIUM
+                    val action =
+                        NotesListFragmentDirections.actionNotesListFragmentToUpdateNoteFragment(note)
+                    view.findNavController().navigate(action)
+                    true
+                }
+                contextMenu?.add(0, 2, 0, "High")?.setOnMenuItemClickListener {
+                    note.priority = Priority.HIGH
+                    val action =
+                        NotesListFragmentDirections.actionNotesListFragmentToUpdateNoteFragment(note)
+                    view.findNavController().navigate(action)
+                    true
+                }
             }
 
         }
@@ -52,7 +84,7 @@ class NotesAdapter : RecyclerView.Adapter<NotesAdapter.ViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val itemNoteBinding =
-                ItemNoteBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+            ItemNoteBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         return ViewHolder(itemNoteBinding)
     }
 
@@ -66,7 +98,12 @@ class NotesAdapter : RecyclerView.Adapter<NotesAdapter.ViewHolder>() {
     }
 
     fun setNotesList(newListOfNotes: List<Note>) {
-        val notesDiffResult = DiffUtil.calculateDiff(NotesDiffUtil(oldNotesList = listOfNotes, newNotesList = newListOfNotes))
+        val notesDiffResult = DiffUtil.calculateDiff(
+            NotesDiffUtil(
+                oldNotesList = listOfNotes,
+                newNotesList = newListOfNotes
+            )
+        )
         this.listOfNotes = newListOfNotes
         notesDiffResult.dispatchUpdatesTo(this)
     }
