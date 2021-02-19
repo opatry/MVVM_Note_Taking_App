@@ -5,15 +5,15 @@
     <item
         android:id="@+id/menu_delete_note"
         android:icon="@drawable/ic_delete"
-        android:iconTint="@color/white"
         android:title="@string/delete_note"
+        app:iconTint="@color/white"
         app:showAsAction="ifRoom" />
 
     <item
         android:id="@+id/menu_update_note"
         android:icon="@drawable/ic_save"
-        android:iconTint="@color/white"
         android:title="@string/update_note"
+        app:iconTint="@color/white"
         app:showAsAction="ifRoom" />
 
 

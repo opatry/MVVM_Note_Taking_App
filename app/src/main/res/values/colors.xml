@@ -13,4 +13,10 @@
     <color name="gray_bg_darker">#D9DCE1</color>
     <color name="dark_gray">#4B4B4B</color>
 
+    <color name="low_priority_color">#2CC990</color>
+    <color name="medium_priority_color">#FDD835</color>
+    <color name="high_priority_color">#FC6042</color>
+
+    <color name="main">#2CC990</color>
+
 </resources>

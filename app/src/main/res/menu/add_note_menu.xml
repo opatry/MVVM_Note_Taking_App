@@ -5,8 +5,8 @@
     <item
         android:id="@+id/menu_save_note"
         android:icon="@drawable/ic_save"
-        android:iconTint="@color/white"
         android:title="@string/save_note"
+        app:iconTint="@color/white"
         app:showAsAction="ifRoom" />
 
 </menu>

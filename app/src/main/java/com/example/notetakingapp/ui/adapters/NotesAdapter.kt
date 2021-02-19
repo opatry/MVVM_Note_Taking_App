@@ -29,16 +29,16 @@ class NotesAdapter : RecyclerView.Adapter<NotesAdapter.ViewHolder>() {
 
             when (note.priority) {
                 Priority.LOW -> {
-                    itemNoteBinding.priorityColorView.backgroundTintList = ContextCompat.getColorStateList(context, R.color.purple_200)
-                    itemNoteBinding.priorityColorView.text = "LOW"
+                    itemNoteBinding.priorityColorView.backgroundTintList = ContextCompat.getColorStateList(context, R.color.low_priority_color)
+                    itemNoteBinding.priorityColorView.text = context.getString(R.string.low)
                 }
                 Priority.MEDIUM -> {
-                    itemNoteBinding.priorityColorView.backgroundTintList = ContextCompat.getColorStateList(context, R.color.purple_500)
-                    itemNoteBinding.priorityColorView.text = "MEDIUM"
+                    itemNoteBinding.priorityColorView.backgroundTintList = ContextCompat.getColorStateList(context, R.color.medium_priority_color)
+                    itemNoteBinding.priorityColorView.text = context.getString(R.string.medium)
                 }
                 Priority.HIGH -> {
-                    itemNoteBinding.priorityColorView.backgroundTintList = ContextCompat.getColorStateList(context, R.color.purple_700)
-                    itemNoteBinding.priorityColorView.text = "HIGH"
+                    itemNoteBinding.priorityColorView.backgroundTintList = ContextCompat.getColorStateList(context, R.color.high_priority_color)
+                    itemNoteBinding.priorityColorView.text = context.getString(R.string.high)
                 }
             }
 
