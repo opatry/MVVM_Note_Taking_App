@@ -23,10 +23,12 @@ import com.example.notetakingapp.models.SortBy.*
 import com.example.notetakingapp.ui.adapters.NotesAdapter
 import com.example.notetakingapp.ui.viewmodels.NotesViewModel
 import com.google.android.material.snackbar.Snackbar
+import dagger.hilt.android.AndroidEntryPoint
 import java.util.*
 
 private lateinit var notesAdapter: NotesAdapter
 
+@AndroidEntryPoint
 class NotesListFragment : Fragment() {
 
     private val notesViewModel: NotesViewModel by viewModels()

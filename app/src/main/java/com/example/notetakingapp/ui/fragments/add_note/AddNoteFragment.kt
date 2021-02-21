@@ -13,8 +13,10 @@ import com.example.notetakingapp.models.Priority
 import com.example.notetakingapp.ui.viewmodels.NotesViewModel
 import com.example.notetakingapp.util.TimeUtil
 import com.google.android.material.chip.Chip
+import dagger.hilt.android.AndroidEntryPoint
 import java.util.*
 
+@AndroidEntryPoint
 class AddNoteFragment : Fragment() {
 
     private val notesViewModel: NotesViewModel by viewModels()

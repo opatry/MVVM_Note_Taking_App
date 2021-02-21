@@ -1,23 +1,23 @@
 package com.example.notetakingapp.ui.viewmodels
 
-import android.app.Application
-import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
+import androidx.lifecycle.ViewModel
 import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
-import com.example.notetakingapp.db.NotesDatabase
 import com.example.notetakingapp.models.Note
 import com.example.notetakingapp.repository.DataStoreRepository
 import com.example.notetakingapp.repository.NotesRepository
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class NotesViewModel(application: Application) : AndroidViewModel(application) {
-
-    private val notesDao = NotesDatabase.invoke(application).getNotesDao()
-    private val repository: NotesRepository
-
-    private val dataStoreRepository = DataStoreRepository(application)
+@HiltViewModel
+class NotesViewModel
+@Inject constructor(
+    private val repository: NotesRepository,
+    private val dataStoreRepository: DataStoreRepository
+) : ViewModel() {
 
     private val _allNotes: LiveData<List<Note>>
     val allNotes: LiveData<List<Note>>
@@ -28,7 +28,6 @@ class NotesViewModel(application: Application) : AndroidViewModel(application) {
         get() = _readFromDataStore
 
     init {
-        repository = NotesRepository(notesDao)
         _readFromDataStore = dataStoreRepository.readFromDataStore.asLiveData()
         _allNotes = repository.getAllNotes
     }
