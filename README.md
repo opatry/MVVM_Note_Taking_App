@@ -11,6 +11,8 @@ Note taking application built in Kotlin using the latest Jetpack Components and 
 
 ✅ MVVM Architecture
 
+✅ Hilt Dependency Injection
+
 ✅ LiveData
 
 ✅ Coroutines
