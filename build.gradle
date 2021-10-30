@@ -14,12 +14,54 @@ buildscript {
         // in the individual module build.gradle files
     }
 }
+subprojects {
+    afterEvaluate { proj ->
+//        plugins.withId('com.android.application') {
+//            repositories {
+//                flatDir {
+//                    dirs "$rootDir/iink_sdk/pdftron"
+//                }
+//            }
+//        }
+
+        if (proj.hasProperty('android')) {
+            android {
+                ndkVersion '21.4.7075529'
+            }
+        }
+    }
+}
+
+def localProperties = new Properties()
+def localPropertiesFile = project.rootProject.file('local.properties')
+if (localPropertiesFile.isFile()) {
+    localProperties.load(localPropertiesFile.newDataInputStream())
+}
+
+// To override abiFilters use local.properties with `abiFilters=armeabi-v7a,arm64-v8a`
+def abis = localProperties.getProperty('abiFilters')?.split(',') ?: ['armeabi-v7a', 'arm64-v8a', 'x86', 'x86_64']
+def ccacheBin = localProperties.getProperty('ccache.bin', 'ccache')
 
 allprojects {
     repositories {
         google()
         jcenter()
     }
+
+    ext {
+        compileSdkVersion = 30
+        minSdkVersion = 23
+        targetSdkVersion = 30
+        appcompatVersion = '1.2.0'
+        annotationVersion = '1.2.0'
+
+        iinkVersionCode = 1
+        iinkVersionName = "1"
+
+        cmakeVersion = '3.18.1'
+        abiFilters = abis
+    }
+    ext.ccacheBin = ccacheBin
 }
 
 task clean(type: Delete) {

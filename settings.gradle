@@ -1,2 +1,12 @@
 include ':app'
 rootProject.name = "NoteTakingApp"
+
+def iink_sdk_dir = file("$settingsDir/../vo/iink_sdk")
+include ':iink'
+project(':iink').projectDir = file("$settingsDir/../myscript-iink-lib-android-1.5.0/iink/bin/android")
+//project(':iink').projectDir = file("$iink_sdk_dir/iink/api/java")
+//project(':iink').buildFileName = 'build_android.gradle'
+include ':iink-android'
+project(':iink-android').projectDir = file("$iink_sdk_dir/iink/examples/android/UIReferenceImplementation")
+include ':test-certificate'
+project(':test-certificate').projectDir = file("$iink_sdk_dir/test/certificate")
