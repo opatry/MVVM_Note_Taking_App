@@ -10,7 +10,7 @@ android {
     buildToolsVersion "30.0.2"
 
     buildFeatures{
-        viewBinding = true
+        viewBinding true
     }
 
     defaultConfig {
@@ -84,4 +84,7 @@ dependencies {
     // Lottie animations
     implementation "com.airbnb.android:lottie:3.6.1"
 
+    // MyScript
+    implementation project(':iink-android')
+    implementation project(':test-certificate')
 }
