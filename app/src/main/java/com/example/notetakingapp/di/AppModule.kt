@@ -33,6 +33,12 @@ object AppModule {
         database: NotesDatabase
     ) = database.getNotesDao()
 
+    // TODO named provide
+    @Singleton
+    @Provides
+    fun provideRootDirectory(
+        @ApplicationContext context: Context
+    ) = context.filesDir
 
     // TODO named provide
     @Singleton
